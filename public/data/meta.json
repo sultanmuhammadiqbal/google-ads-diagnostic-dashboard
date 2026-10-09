@@ -1,0 +1,102 @@
+{
+  "simulation": true,
+  "note": "Seluruh angka fiktif dan dihasilkan oleh scripts/generate-data.mjs.",
+  "seed": 20260701,
+  "startDate": "2026-07-01",
+  "days": 90,
+  "baselineDays": 7,
+  "bidCutThresholdRatio": 1.5,
+  "proposedBidCutPercent": 20,
+  "campaignTypes": [
+    {
+      "id": "search",
+      "name": "Search"
+    },
+    {
+      "id": "pmax",
+      "name": "Performance Max"
+    },
+    {
+      "id": "lokasi",
+      "name": "Lokasi"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "search-a",
+      "name": "Campaign Search A",
+      "type": "search"
+    },
+    {
+      "id": "search-b",
+      "name": "Campaign Search B",
+      "type": "search"
+    },
+    {
+      "id": "search-c",
+      "name": "Campaign Search C",
+      "type": "search"
+    },
+    {
+      "id": "pmax-1",
+      "name": "PMax Produk 1",
+      "type": "pmax"
+    },
+    {
+      "id": "pmax-2",
+      "name": "PMax Produk 2",
+      "type": "pmax"
+    },
+    {
+      "id": "pmax-3",
+      "name": "PMax Produk 3",
+      "type": "pmax"
+    },
+    {
+      "id": "lokasi-1",
+      "name": "Lokasi Cabang 1",
+      "type": "lokasi"
+    },
+    {
+      "id": "lokasi-2",
+      "name": "Lokasi Cabang 2",
+      "type": "lokasi"
+    }
+  ],
+  "devices": [
+    {
+      "id": "mobile",
+      "name": "Mobile"
+    },
+    {
+      "id": "desktop",
+      "name": "Desktop"
+    },
+    {
+      "id": "tablet",
+      "name": "Tablet"
+    }
+  ],
+  "conversionTypes": [
+    {
+      "id": "purchase",
+      "name": "Purchase"
+    },
+    {
+      "id": "store_visit",
+      "name": "Kunjungan Toko"
+    },
+    {
+      "id": "directions",
+      "name": "Petunjuk Arah"
+    },
+    {
+      "id": "add_to_cart",
+      "name": "Add to Cart"
+    },
+    {
+      "id": "begin_checkout",
+      "name": "Begin Checkout"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "google-ads-diagnostic-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Dashboard diagnostik Google Ads dengan data sepenuhnya fiktif (studi kasus portofolio).",
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate-data.mjs",
+    "verify:data": "node scripts/verify-data.mjs",
+    "check:determinism": "node scripts/check-determinism.mjs",
+    "scan": "node scripts/scan-sensitive.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.4"
+  }
+}
