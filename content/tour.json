@@ -1,0 +1,8 @@
+[
+  { "target": "grafik-cpa", "tampilan": "all", "topik": "Apa yang terlihat pertama: grafik CPA per perangkat pada Semua konversi", "judul": "", "teks": "" },
+  { "target": "kartu-rekomendasi", "tampilan": "all", "topik": "Pertanyaan sebelum percaya angka itu", "judul": "", "teks": "" },
+  { "target": "tabel-kontribusi", "tampilan": "all", "topik": "Apa yang diperiksa: komposisi jenis konversi per perangkat", "judul": "", "teks": "" },
+  { "target": "toggle-konversi", "tampilan": "purchase", "topik": "Tombol Purchase saja: apa yang berubah pada grafik", "judul": "", "teks": "" },
+  { "target": "kartu-rekomendasi", "tampilan": "purchase", "topik": "Rekomendasi yang gugur dan alasannya", "judul": "", "teks": "" },
+  { "target": "paragraf-log", "tampilan": "purchase", "topik": "Apa yang dipantau setelah keputusan itu", "judul": "", "teks": "" }
+]

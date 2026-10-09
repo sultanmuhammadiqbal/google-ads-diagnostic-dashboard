@@ -10,6 +10,9 @@
     "check:determinism": "node scripts/check-determinism.mjs",
     "scan": "node scripts/scan-sensitive.mjs",
     "dev": "vite",
+    "check:content": "node scripts/check-content.mjs",
+    "test:content": "node scripts/test-content-rules.mjs",
+    "prebuild": "node scripts/check-content.mjs --build",
     "build": "vite build",
     "preview": "vite preview"
   },

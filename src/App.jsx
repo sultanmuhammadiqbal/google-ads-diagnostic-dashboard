@@ -3,19 +3,22 @@ import { loadData } from './lib/data.js';
 import Summary from './components/Summary.jsx';
 import Diagnosis from './components/Diagnosis.jsx';
 import DecisionLog from './components/DecisionLog.jsx';
+import Skills from './components/Skills.jsx';
 
 export const SIM_BANNER =
   'Data simulasi. Struktur dan kasus diagnosis berasal dari pengalaman kerja nyata; seluruh angka fiktif dan dihasilkan oleh skrip.';
 
 const ROUTES = [
-  { id: 'ringkasan', label: 'Ringkasan' },
-  { id: 'diagnosis', label: 'Diagnosis' },
-  { id: 'log', label: 'Log keputusan' },
+  { id: 'ringkasan', label: 'Ringkasan', short: 'Ringkasan' },
+  { id: 'diagnosis', label: 'Diagnosis', short: 'Diagnosis' },
+  { id: 'log', label: 'Log keputusan', short: 'Log' },
+  { id: 'kemampuan', label: 'Peta kemampuan', short: 'Kemampuan' },
 ];
 
+// Hash bentuk "#/<halaman>" atau "#/<halaman>/<param>" (mis. #/log/<id entri> membuka kartunya).
 const readRoute = () => {
-  const id = window.location.hash.replace(/^#\/?/, '');
-  return ROUTES.some((r) => r.id === id) ? id : 'ringkasan';
+  const [id, param] = window.location.hash.replace(/^#\/?/, '').split('/');
+  return ROUTES.some((r) => r.id === id) ? { id, param: param || null } : { id: 'ringkasan', param: null };
 };
 
 function useRoute() {
@@ -55,8 +58,9 @@ export default function App() {
             <ul className="tabs">
               {ROUTES.map((r) => (
                 <li key={r.id}>
-                  <a href={`#/${r.id}`} aria-current={route === r.id ? 'page' : undefined}>
-                    {r.label}
+                  <a href={`#/${r.id}`} aria-current={route.id === r.id ? 'page' : undefined} aria-label={r.label}>
+                    <span className="lbl-full" aria-hidden="true">{r.label}</span>
+                    <span className="lbl-short" aria-hidden="true">{r.short}</span>
                   </a>
                 </li>
               ))}
@@ -74,15 +78,16 @@ export default function App() {
         )}
         {state.status === 'ready' && (
           <>
-            {route === 'ringkasan' && <Summary data={state.data} />}
-            {route === 'diagnosis' && <Diagnosis data={state.data} />}
-            {route === 'log' && <DecisionLog data={state.data} />}
+            {route.id === 'ringkasan' && <Summary data={state.data} />}
+            {route.id === 'diagnosis' && <Diagnosis data={state.data} />}
+            {route.id === 'log' && <DecisionLog data={state.data} initialId={route.param} />}
+            {route.id === 'kemampuan' && <Skills />}
           </>
         )}
       </main>
 
       <footer className="container site-footer">
-        <p>Studi kasus portofolio. Seluruh angka dalam dashboard ini fiktif; biaya ditampilkan sebagai indeks (rata-rata harian 7 hari pertama = 100), bukan Rupiah.</p>
+        <p>Studi kasus portofolio. Seluruh angka pada bagian simulasi fiktif; biaya ditampilkan sebagai indeks (rata-rata harian 7 hari pertama = 100), bukan Rupiah.</p>
       </footer>
     </>
   );

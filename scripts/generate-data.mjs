@@ -143,40 +143,45 @@ const rows = rawRows.map((r) => [r[0], r[1], r[2], Math.round((r[3] / baselineCo
 const BID_CUT_THRESHOLD = 1.5;
 const decisions = [
   {
+    id: 'negative-keyword-search-b',
     date: '2026-08-12',
     decision: 'Tambah negative keyword pada Campaign Search B',
     reason: 'Istilah pencarian yang memuat Brand A dan kata "bekas" menghabiskan klik tanpa Purchase maupun Add to Cart.',
     threshold: 'Minimal 200 klik dan 0 Purchase dalam 14 hari',
     status: 'Dilakukan',
-    expected: 'Biaya terbuang pada campaign ini turun sekitar 5%.',
+    expected: 'Porsi klik tanpa Purchase pada campaign ini diharapkan mengecil.',
   },
   {
+    id: 'bid-cut-desktop-dibatalkan',
     date: '2026-09-29',
     decision: 'Rekomendasi bid cut Desktop dibatalkan',
     reason:
       'CPA Desktop tampak jauh di atas Mobile hanya pada tampilan "Semua konversi", karena Kunjungan Toko dan Petunjuk Arah hampir seluruhnya tercatat dari Mobile. Dengan Purchase saja, selisihnya hilang.',
     threshold: `CPA Desktop lebih dari ${String(BID_CUT_THRESHOLD).replace('.', ',')}× CPA Mobile pada konversi yang sebanding`,
     status: 'Dibatalkan',
-    expected: 'Tidak ada perubahan bid. Menghindari kehilangan Purchase dari Desktop.',
+    expected: 'Bid Desktop tidak berubah. Purchase dari Desktop tetap berjalan seperti sebelumnya.',
     ref: 'diagnosis',
   },
   {
+    id: 'jeda-search-c',
     date: '2026-09-29',
     decision: 'Jeda Campaign Search C',
     reason: 'Biaya tertinggi di antara campaign Search, sedangkan Purchase hampir nol selama seluruh periode.',
     threshold: 'CPA Purchase lebih dari 3× rata-rata akun selama 30 hari berturut-turut',
     status: 'Dilakukan',
-    expected: 'Indeks biaya akun turun sekitar 10% dengan Purchase hampir tidak berubah.',
+    expected: 'Biaya tidak lagi mengalir ke campaign yang hampir tanpa Purchase.',
   },
   {
+    id: 'geser-budget-pmax',
     date: '2026-09-30',
-    decision: 'Pindahkan 15% budget PMax Produk 3 ke PMax Produk 1',
+    decision: 'Geser 15% budget PMax Produk 3 ke PMax Produk 1',
     reason: 'PMax Produk 3 menghabiskan budget dengan Purchase hampir nol, sedangkan PMax Produk 1 punya CPA Purchase jauh lebih rendah.',
     threshold: 'Selisih CPA Purchase antar campaign PMax lebih dari 2×',
     status: 'Dilakukan',
-    expected: 'Purchase naik sekitar 3% pada biaya yang sama.',
+    expected: 'Budget bergeser ke campaign dengan CPA Purchase yang lebih rendah.',
   },
   {
+    id: 'laporan-cpa-per-jenis-konversi',
     date: '2026-10-01',
     decision: 'Laporan CPA dipisah per jenis konversi',
     reason: 'Perbandingan CPA antar perangkat harus memakai jenis konversi yang sama; Purchase dilaporkan terpisah dari Kunjungan Toko dan Petunjuk Arah.',
@@ -186,6 +191,7 @@ const decisions = [
     ref: 'diagnosis',
   },
   {
+    id: 'pertahankan-budget-lokasi',
     date: '2026-10-02',
     decision: 'Pertahankan budget Lokasi Cabang 1 dan 2',
     reason: 'Kedua campaign ini dinilai dari Kunjungan Toko dan Petunjuk Arah, bukan Purchase. Purchase rendah di sini memang diharapkan.',

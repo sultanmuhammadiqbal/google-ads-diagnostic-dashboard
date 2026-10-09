@@ -2,6 +2,9 @@ import { useMemo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ReferenceLine, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { groupBy, sumRows } from '../lib/aggregate.js';
 import { fmtIndex, fmtInt, fmtPct, fmtRatio } from '../lib/format.js';
+import tourSteps from '../../content/tour.json';
+import { validateTour } from '../lib/contentRules.js';
+import Tour from './Tour.jsx';
 
 const VIEWS = [
   { id: 'all', label: 'Semua konversi', hint: 'Menjumlahkan kelima jenis konversi' },
@@ -15,6 +18,8 @@ const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(pref
 export default function Diagnosis({ data }) {
   const { meta, rows } = data;
   const [view, setView] = useState('all');
+  const [touring, setTouring] = useState(false);
+  const tourOk = validateTour(tourSteps).length === 0;
 
   const perDevice = useMemo(() => {
     const g = groupBy(rows, 'device');
@@ -40,14 +45,21 @@ export default function Diagnosis({ data }) {
 
   return (
     <div className="page">
-      <h1>Diagnosis</h1>
+      <div className="page-head">
+        <h1>Diagnosis</h1>
+        {tourOk && (
+          <button type="button" className="btn btn-primary" onClick={() => setTouring(true)} disabled={touring}>
+            Mulai tur
+          </button>
+        )}
+      </div>
       <p className="lede">
-        Kasus: rekomendasi menurunkan bid Desktop karena CPA-nya tampak jauh lebih tinggi daripada Mobile. Ganti cara menghitung konversi dengan tombol di bawah dan lihat apa yang terjadi pada grafik serta rekomendasinya.
+        Kasus: ada rekomendasi untuk mengurangi bid Desktop karena CPA-nya tampak jauh lebih tinggi daripada Mobile. Ganti cara menghitung konversi dengan tombol di bawah dan lihat apa yang terjadi pada grafik serta rekomendasinya.
       </p>
 
       <section aria-labelledby="toggle-title" className="panel">
         <h2 id="toggle-title" className="panel-title">Hitung konversi dengan</h2>
-        <div className="segmented" role="group" aria-labelledby="toggle-title">
+        <div className="segmented" role="group" aria-labelledby="toggle-title" data-tour="toggle-konversi">
           {VIEWS.map((v) => (
             <button key={v.id} type="button" aria-pressed={view === v.id} onClick={() => setView(v.id)}>
               <span className="seg-label">{v.label}</span>
@@ -57,7 +69,7 @@ export default function Diagnosis({ data }) {
         </div>
 
         <div className="diag-grid">
-          <figure className="chart-block">
+          <figure className="chart-block" data-tour="grafik-cpa">
             <figcaption>
               <strong>CPA per perangkat</strong> ({view === 'all' ? 'semua konversi' : 'Purchase saja'}, {meta.days} hari). Indeks: 100 = CPA rata-rata seluruh akun pada tampilan ini; lebih rendah lebih baik.
             </figcaption>
@@ -91,11 +103,11 @@ export default function Diagnosis({ data }) {
             </ul>
           </figure>
 
-          <div className={`rec ${exceeds ? 'rec-active' : 'rec-dropped'}`} aria-live="polite">
+          <div className={`rec ${exceeds ? 'rec-active' : 'rec-dropped'}`} aria-live="polite" data-tour="kartu-rekomendasi">
             <p className="rec-kicker">Rekomendasi</p>
             {exceeds ? (
               <>
-                <p className="rec-title">Turunkan bid Desktop {meta.proposedBidCutPercent}%</p>
+                <p className="rec-title">Kurangi bid Desktop {meta.proposedBidCutPercent}%</p>
                 <p className="rec-badge">Berlaku pada tampilan ini</p>
                 <p>
                   CPA Desktop adalah <strong>{fmtRatio(cpaRatio)}</strong> CPA Mobile, melewati ambang {fmtRatio(threshold)}. Desktop tampak boros dibanding Mobile.
@@ -103,7 +115,7 @@ export default function Diagnosis({ data }) {
               </>
             ) : (
               <>
-                <p className="rec-title">Rekomendasi gugur: bid Desktop tidak diturunkan</p>
+                <p className="rec-title">Rekomendasi gugur: bid Desktop dipertahankan</p>
                 <p className="rec-badge">Dibatalkan</p>
                 <p>
                   Dengan Purchase saja, CPA Desktop adalah <strong>{fmtRatio(cpaRatio)}</strong> CPA Mobile
@@ -120,7 +132,7 @@ export default function Diagnosis({ data }) {
 
       <section aria-labelledby="contrib-title" className="panel">
         <h2 id="contrib-title" className="panel-title">Kontribusi tiap jenis konversi per perangkat</h2>
-        <div className="table-wrap">
+        <div className="table-wrap" data-tour="tabel-kontribusi">
           <table className="stack">
             <thead>
               <tr>
@@ -173,10 +185,11 @@ export default function Diagnosis({ data }) {
         <p>
           Kunjungan Toko dan Petunjuk Arah adalah sinyal menuju toko fisik, dan hampir seluruhnya tercatat dari Mobile karena orang mencari lokasi lewat ponsel. Keduanya banyak dan murah dicapai, sehingga ketika semua jenis konversi dijumlahkan, pembagi CPA Mobile membengkak dan CPA-nya tampak rendah. Desktop, yang konversinya hampir seluruhnya online, tampak mahal. Selisih itu bukan perbedaan efisiensi, melainkan perbedaan apa yang dihitung.
         </p>
-        <p>
-          Perbandingan yang adil memakai satu jenis konversi yang sama-sama bernilai bagi bisnis di semua perangkat, di sini Purchase. Pada tampilan itu, CPA Desktop setara atau lebih baik daripada Mobile, sehingga rekomendasi menurunkan bid Desktop gugur sebelum dieksekusi. Keputusannya tercatat di <a href="#/log">Log keputusan</a>.
+        <p data-tour="paragraf-log">
+          Perbandingan yang adil memakai satu jenis konversi yang sama-sama bernilai bagi bisnis di semua perangkat, di sini Purchase. Pada tampilan itu, CPA Desktop setara atau lebih baik daripada Mobile, sehingga rekomendasi mengurangi bid Desktop gugur sebelum dieksekusi. Keputusannya tercatat di <a href="#/log">Log keputusan</a>.
         </p>
       </section>
+      {touring && <Tour steps={tourSteps} onView={setView} onClose={() => setTouring(false)} />}
     </div>
   );
 }
