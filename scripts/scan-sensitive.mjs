@@ -27,8 +27,15 @@ const PATTERNS = [
 const termsIdx = process.argv.indexOf('--terms');
 let terms = [];
 if (termsIdx > -1) {
-  const p = process.argv[termsIdx + 1].replace(/^~(?=\/|$)/, homedir());
-  terms = readFileSync(resolve(p), 'utf8').split('\n');
+  const arg = process.argv[termsIdx + 1];
+  const p = resolve((arg ?? '').replace(/^~(?=\/|$)/, homedir()));
+  if (!arg || !existsSync(p)) {
+    console.error(`Berkas daftar istilah tidak ditemukan: ${arg ? p : '(tidak ada alamat setelah --terms)'}`);
+    console.error('Buat dulu berkas teks berisi satu istilah per baris, di luar folder proyek ini. Contoh:');
+    console.error('  touch ~/istilah-sensitif.txt && open -e ~/istilah-sensitif.txt');
+    process.exit(2);
+  }
+  terms = readFileSync(p, 'utf8').split('\n');
 } else if (process.env.SENSITIVE_TERMS) {
   terms = process.env.SENSITIVE_TERMS.split(',');
 }
